@@ -1,33 +1,34 @@
-export const navigationOptions = [
+interface NavOptions {
+label:string,
+link?:string | null,
+items: readonly {
+  name:string,
+  link:string
+}[]
+}
+
+export const navigationOptions : NavOptions[] = [
   {
     label: "Home",
+    link:'/home',
     items: [],
   },    
   {
     label: "Upload",
-    items: [
-      { name: "New Upload", link: "/upload" },
-      { name: "Upload History", link: "/uploads/history" },
-    ],
+    link:'/upload',
+    items:[]
   },
   {
     label: "My Notes",
+    link:null,
     items: [
       { name: "Saved Notes", link: "/notes/saved" },
-      { name: "Summarized Notes", link: "/notes/summary" },
-      { name: "PDF Generator", link: "/notes/pdf-generator" },
-    ],
-  },
-  {
-    label: "Explore AI",
-    items: [
-      { name: "Auto Highlights", link: "/ai/highlights" },
-      { name: "Important Questions", link: "/ai/questions" },
-      { name: "Topic Categorization", link: "/ai/topics" },
+      { name: "Upload History", link: "/notes/history" },
     ],
   },
   {
     label: "Account",
+    link:null,
     items: [
       { name: "Profile", link: "/account/profile" },
       { name: "Logout", link: "/logout" },
@@ -35,9 +36,10 @@ export const navigationOptions = [
   },
   {
     label: "Support",
+    link:null,
     items: [
       { name: "Raise Issue", link: "/support/issue" },
       { name: "Contact Us", link: "/support/contact" } 
     ]
   },
-];
+] as const

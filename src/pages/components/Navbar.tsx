@@ -17,12 +17,11 @@ export function NavBar() {
     <NavigationMenu className="shadow-md w-screen p-2" viewport={false}>
       <NavigationMenuList>
         {navigationOptions.map((navOption) => (
-          <NavigationMenuItem key={navOption.label}>
-            {navOption.items.length === 0 ? (
+          <NavigationMenuItem className="font-semibold mx-5" key={navOption.label}>
+            {navOption.link ? (
               <NavigationMenuLink asChild>
                 <Link
-                  to="/"
-                  
+                  to={navOption.link}    
                 >
                   {navOption.label}
                 </Link>
