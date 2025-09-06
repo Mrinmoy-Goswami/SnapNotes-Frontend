@@ -7,12 +7,7 @@ items: readonly {
 }[]
 }
 
-export const navigationOptions : NavOptions[] = [
-  {
-    label: "Home",
-    link:'/home',
-    items: [],
-  },    
+export const navigationOptions : NavOptions[] = [  
   {
     label: "Upload",
     link:'/upload',
@@ -31,7 +26,6 @@ export const navigationOptions : NavOptions[] = [
     link:null,
     items: [
       { name: "Profile", link: "/account/profile" },
-      { name: "Logout", link: "/logout" },
     ],
   },
   {
