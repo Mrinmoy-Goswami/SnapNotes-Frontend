@@ -9,6 +9,11 @@ items: readonly {
 
 export const navigationOptions : NavOptions[] = [  
   {
+    label:"Home",
+    link : "/",
+    items:[]
+  },
+  {
     label: "Upload",
     link:'/upload',
     items:[]

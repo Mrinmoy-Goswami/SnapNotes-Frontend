@@ -18,7 +18,7 @@ const cognitoAuthConfig = {
   authority:import.meta.env.VITE_COGNITO_AUTHORITY,
   client_id: import.meta.env.VITE_CLIENT_ID,
   redirect_uri: "http://localhost:5173",
-  // post_logout_redirect_uri: "http://localhost:5173",
+  // post_logout_redirect_uri: "http://localhost:5173", 
   response_type: "code",
   scope: "email openid s3-api/Upload",
 };

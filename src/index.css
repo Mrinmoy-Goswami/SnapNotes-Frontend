@@ -5,28 +5,46 @@
 
 
   @theme {
-    /* Light Mode Colors */
+  /* 🌞 Light Mode Colors */
   --color-lightBg: #F8FAFC;          /* soft background */
+  --color-lightSurface: #FFFFFF;     /* cards, navbar, sections */
   --color-lightText: #0F172A;        /* dark slate text */
-  --color-lightAccent: #2563EB;      /* blue accent */
-  --color-lightSecondary: #64748B;   /* secondary text */
-  --color-buttonLightBg: #60A5FA;  /*blue-400
-  
-  /* Dark Mode Colors */
+  --color-lightAccent: #2563EB;      /* strong blue accent */
+  --color-lightSecondary: #64748B;   /* muted text */
+  --color-lightBorder: #E2E8F0;      /* subtle border */
+  --color-lightHover: #EFF6FF;       /* hover effect */
+
+  --color-buttonLightBg: #60A5FA;    /* blue-400 */
+  --color-buttonLightText: #FFFFFF;  /* button text */
+  --color-buttonLightHover: #3B82F6; /* blue-500 hover */
+
+  /* 🌙 Dark Mode Colors */
   --color-darkBg: #0F172A;           /* dark slate background */
-  --color-darkText: #F8FAFC ;         /* light text */
+  --color-darkSurface: #1E293B;      /* slightly lighter surface */
+  --color-darkText: #F8FAFC;         /* light text */
   --color-darkAccent: #60A5FA;       /* softer blue accent */
-  --color-darkSecondary: #94A3B8;    /* secondary text in dark mode */
-  --color-buttonDarkBg : #ffffff ;
-  /* Neon Pinkish Indigo Shadow */
+  --color-darkSecondary: #94A3B8;    /* muted text */
+  --color-darkBorder: #334155;       /* subtle border */
+  --color-darkHover: #1E3A8A;        /* hover blue */
+
+  --color-buttonDarkBg: #FFFFFF;     /* white button */
+  --color-buttonDarkText: #0F172A;   /* dark text inside */
+  --color-buttonDarkHover: #CBD5E1;  /* gray hover */
+
+  /* 🌟 Special Effects */
   --color-darkShadow: #8B5CF6;       /* neon indigo-pink */
-  
-  /* Fonts */
+
+  /* ✅ Utility Colors */
+  --color-success: #22C55E;          /* green */
+  --color-error: #EF4444;            /* red */
+  --color-warning: #FACC15;          /* yellow */
+  --color-info: #3B82F6;             /* blue */
+
+  /* ✍️ Fonts */
   --font-header: 'Poppins', sans-serif;
   --font-subheader: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
-   
-  }
+}
 
 
 @theme inline {

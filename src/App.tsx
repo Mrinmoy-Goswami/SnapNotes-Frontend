@@ -3,11 +3,11 @@ import { Outlet } from "react-router-dom";
 import { NavBar } from "./pages/components/Navbar";
 import React from "react";
 import { RequireAuth } from "./pages/components/AuthWrapper";
-import { useAuth } from "react-oidc-context";
+// import { useAuth } from "react-oidc-context";
 
 const App = () => {
 
-  const user = useAuth()
+  // const user = useAuth()
 
 
      return (
