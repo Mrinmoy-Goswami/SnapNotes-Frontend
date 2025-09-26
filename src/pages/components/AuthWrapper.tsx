@@ -15,7 +15,7 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
 
   if (auth.isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen dark:text-cyan-300">
+      <div className="flex items-center justify-center h-screen ">
         Checking authentication...
       </div>
     );

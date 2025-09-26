@@ -20,6 +20,7 @@ const UploadFileForm = () => {
     e.preventDefault();
     if (!files) return;
     uploadFiles.mutate(files[0]);
+    setFiles(null)
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +30,7 @@ const UploadFileForm = () => {
   const uploadFiles = useMutation({
     mutationFn: async (selectedFile: File) => {
       try {
-        // 1. Get signed URL
-        const signedUrl = await axios.post(
+        const signedUrl = (await axios.post(
           ApiURL.GET_S3_SIGNED_URL,
           {
             fileName: selectedFile.name,
@@ -42,16 +42,14 @@ const UploadFileForm = () => {
               Authorization: `Bearer ${auth.user?.access_token}`, // important
             },
           }
-        ) as AxiosResponse<SignedUrlResponse>;
+        )) as AxiosResponse<SignedUrlResponse>;
 
-        // 2. Upload file directly to S3
-        const res = await axios.put(signedUrl.data.uploadUrl, selectedFile, {
+        await axios.put(signedUrl.data.uploadUrl, selectedFile, {
           headers: { "Content-Type": selectedFile.type },
         });
-
-        console.log("✅ Uploaded:", res);
       } catch (error) {
         console.error("❌ Upload failed", error);
+        window.alert("Failed to Upload")
       }
     },
   });
@@ -115,6 +113,37 @@ const UploadFileForm = () => {
             "Upload"
           )}
         </button>
+
+        {/* Action Buttons (Short, Deep, Practice) */}
+        <div className="w-full flex flex-col sm:flex-row gap-4 mt-6">
+          <button
+            type="button"
+            className="flex-1 px-4 py-3 rounded-lg font-semibold 
+                       bg-[var(--color-lightAccent)] dark:bg-[var(--color-darkAccent)] 
+                       text-white dark:text-[var(--color-darkText)] 
+                       hover:opacity-90 transition"
+          >
+            Short Notes
+          </button>
+          <button
+            type="button"
+            className="flex-1 px-4 py-3 rounded-lg font-semibold 
+                       bg-green-500 dark:bg-green-400 
+                       text-white dark:text-[var(--color-darkText)] 
+                       hover:opacity-90 transition"
+          >
+            Deep Notes
+          </button>
+          <button
+            type="button"
+            className="flex-1 px-4 py-3 rounded-lg font-semibold 
+                       bg-orange-500 dark:bg-orange-400 
+                       text-white dark:text-[var(--color-darkText)] 
+                       hover:opacity-90 transition"
+          >
+            Practice
+          </button>
+        </div>
       </form>
     </Container>
   );

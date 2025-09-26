@@ -12,6 +12,8 @@ import { ThemeProvider } from './context/ThemeProvider.tsx';
 import { AuthProvider } from 'react-oidc-context';
 
 
+
+
 const queryClient = new QueryClient() 
 
 const cognitoAuthConfig = {
@@ -24,6 +26,8 @@ const cognitoAuthConfig = {
 };
 
 console.log("ENV",import.meta.env.VITE_CLIENT_ID)
+
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
