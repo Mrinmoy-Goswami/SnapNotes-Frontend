@@ -19,7 +19,7 @@ const UploadFileForm = () => {
   const handleUpload = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!files) return;
-    uploadFiles.mutate(files[0]);
+    uploadFilesMutation.mutate(files[0]);
     setFiles(null)
   };
 
@@ -27,10 +27,9 @@ const UploadFileForm = () => {
     setFiles(e.target.files);
   };
 
-  const uploadFiles = useMutation({
+  const uploadFilesMutation = useMutation({
     mutationFn: async (selectedFile: File) => {
-      try {
-        const signedUrl = (await axios.post(
+        const signedUrl = await axios.post(
           ApiURL.GET_S3_SIGNED_URL,
           {
             fileName: selectedFile.name,
@@ -42,17 +41,24 @@ const UploadFileForm = () => {
               Authorization: `Bearer ${auth.user?.access_token}`, // important
             },
           }
-        )) as AxiosResponse<SignedUrlResponse>;
-
-        await axios.put(signedUrl.data.uploadUrl, selectedFile, {
-          headers: { "Content-Type": selectedFile.type },
-        });
-      } catch (error) {
-        console.error("❌ Upload failed", error);
-        window.alert("Failed to Upload")
-      }
+        ) as AxiosResponse<SignedUrlResponse>;
+         const {key : s3Key} = signedUrl.data as SignedUrlResponse
+         await axios.put(signedUrl.data.uploadUrl, selectedFile, {
+           headers: { "Content-Type": selectedFile.type },
+          });
+          return s3Key
+        },
+        onSuccess: () => {
+        alert("File Uploaded Successfully !")
+    },
+    onError: (err) => {
+      console.error("Upload failed:", err);
+      alert("Failed to upload file");
     },
   });
+
+  console.log("MUTATION_RES",uploadFilesMutation)
+ 
 
   return (
     <Container className="flex h-full items-center justify-center mt-12 px-4">
@@ -85,7 +91,7 @@ const UploadFileForm = () => {
             type="file"
             className="hidden"
             onChange={handleFileSelect}
-            disabled={uploadFiles.isPending}
+            disabled={uploadFilesMutation.isPending}
           />
           <span className="text-sm font-medium">
             {files?.[0]?.name ?? "Click to choose a file"}
@@ -95,7 +101,7 @@ const UploadFileForm = () => {
         {/* Upload Button */}
         <button
           type="submit"
-          disabled={!files || uploadFiles.isPending}
+          disabled={!files || uploadFilesMutation.isPending}
           className="relative flex items-center justify-center gap-2 
                      bg-[var(--color-buttonLightBg)] dark:bg-purple-600 
                      text-white dark:text-[var(--color-darkText)] 
@@ -105,7 +111,7 @@ const UploadFileForm = () => {
                      shadow-md hover:shadow-lg 
                      disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {uploadFiles.isPending ? (
+          {uploadFilesMutation.isPending ? (
             <span className="w-6 h-6 dark:text-white light:text:black">
               <Lottie animationData={loader} loop autoplay />
             </span>
