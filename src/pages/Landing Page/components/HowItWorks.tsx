@@ -13,12 +13,12 @@ function HowItWorksSection() {
     {
       icon: <Sparkles />,
       title: "AI Summarizes Or Generates Deep Notes",
-      description: "Our AI creates concise summaries and short notes or dives way deeper than your textbooks.",
+      description: "Our AI creates concise summaries and short notes/MCQs or dives way deeper than your textbooks.",
     },
     {
       icon: <Book />,
       title: "Revise Smarter",
-      description: "Use AI created short notes the night before your exams or get equipped with the deepest knowledge on any topic",
+      description: "Use AI created short notes the night before your exams, practice MCQs or get equipped with the deepest knowledge on any topic",
     },
   ];
 

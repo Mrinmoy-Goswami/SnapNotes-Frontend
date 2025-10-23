@@ -10,6 +10,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './routes.tsx';
 import { ThemeProvider } from './context/ThemeProvider.tsx';
 import { AuthProvider } from 'react-oidc-context';
+import { LoaderProvider } from './context/LoaderContext.tsx';
 
 
 
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider  {...cognitoAuthConfig}>
     <QueryClientProvider client={queryClient} >
+    <LoaderProvider>
 
    <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme' >
     <RouterProvider router={router}/>
@@ -40,6 +42,7 @@ createRoot(document.getElementById('root')!).render(
     {/* <BrowserRouter> */}
     {/* </BrowserRouter> */}
    </ThemeProvider>
+    </LoaderProvider>
     </QueryClientProvider>
     </AuthProvider>
   </StrictMode>,

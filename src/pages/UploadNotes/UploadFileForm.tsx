@@ -6,6 +6,9 @@ import { ApiURL } from "@/constants/ApiURI";
 import Lottie from "lottie-react";
 import loader from "../../assets/loader.json";
 import { useAuth } from "react-oidc-context";
+import { prompts, styles } from '../../constants/constants';
+import FormattedDisplay from "../components/FormattedDisplay";
+import { useLoader } from "@/context/LoaderContext";
 
 interface SignedUrlResponse {
   uploadUrl: string;
@@ -14,10 +17,14 @@ interface SignedUrlResponse {
 
 interface TextractResponse {
   s3Key: string;
-  extractedText: string;
+  extractedTextLength : number,
+  modelUsed: string,
+  geminiResponse : string
 }
 
 const UploadFileForm = () => {
+
+  const { showLoader, hideLoader } = useLoader();
   const auth = useAuth();
   const [files, setFiles] = useState<File[] | null | FileList>(null);
   const [s3Key, setS3Key] = useState("");
@@ -59,9 +66,9 @@ const UploadFileForm = () => {
 
   // 📘 Textract call → only on Short Notes button click
   const textractMutation = useMutation({
-    mutationFn: async (key: string) => {
-      const res = await axios.post(ApiURL.GET_TEXTRACT_DATA, { s3Key: key }) as AxiosResponse<TextractResponse>;
-      return res.data.extractedText;
+    mutationFn: async ({s3Key,promptType} : {s3Key : string,promptType : string} ) => {
+      const res = await axios.post(ApiURL.GET_TEXTRACT_DATA, { s3Key: s3Key, promptType : promptType }) as AxiosResponse<TextractResponse>;
+      return res.data.geminiResponse;
     },
     onSuccess: (text) => {
       setExtractedText(text);
@@ -71,11 +78,18 @@ const UploadFileForm = () => {
       alert("Failed to extract text");
     },
   });
-
+  const handleFileInput = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    e.preventDefault();
+    setFiles(e.target.files)
+    setS3Key("")
+  }
+console.log("EXTRACTED:",extractedText)
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!files) return;
+    showLoader("Uploading ...");
     await uploadFileMutation.mutateAsync(files[0]);
+    hideLoader()
   };
 
   const handleShortNotes = async () => {
@@ -83,11 +97,41 @@ const UploadFileForm = () => {
       alert("Please upload a file first.");
       return;
     }
-    await textractMutation.mutateAsync(s3Key);
+    try {
+      showLoader("Generating short notes...")
+      await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.SHORT_NOTES});
+    } finally{
+      hideLoader()
+    }
+  };
+
+  const handleDeepNotes = async () => {
+    if (!s3Key) {
+      alert("Please upload a file first.");
+      return;
+    }
+    try{
+      showLoader("Generating deep notes...")
+     await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.DEEP_NOTES});
+    }finally{
+      hideLoader()
+    }
+  };
+  const handleMcqs = async () => {
+    if (!s3Key) {
+      alert("Please upload a file first.");
+      return;
+    }
+    try{
+      showLoader("Generating mcqs")
+      await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.QUIZ});
+    } finally{
+      hideLoader()
+    }
   };
 
   return (
-    <Container className="flex h-full items-center justify-center mt-12 px-4">
+    <Container className="flex h-full items-center flex-col justify-center mt-12 px-4">
       <form
         onSubmit={handleUpload}
         className="w-full max-w-xl p-8 rounded-2xl bg-[var(--color-lightBg)] dark:bg-[var(--color-darkBg)] shadow-lg flex flex-col gap-6 items-center"
@@ -99,7 +143,7 @@ const UploadFileForm = () => {
           <input
             type="file"
             className="hidden"
-            onChange={(e) => setFiles(e.target.files)}
+            onChange={handleFileInput}
             disabled={uploadFileMutation.isPending}
           />
           <span className="text-sm font-medium">
@@ -110,29 +154,27 @@ const UploadFileForm = () => {
         {/* Upload button */}
         <button
           type="submit"
-          disabled={uploadFileMutation.isPending}
+          disabled={uploadFileMutation.isPending || !!s3Key}
           className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
         >
           {uploadFileMutation.isPending ? (
-            <span className="w-6 h-6">
-              <Lottie animationData={loader} loop autoplay />
-            </span>
+              <Lottie animationData={loader} size={1} loop autoplay />
           ) : (
             "Upload"
           )}
         </button>
 
         {/* Action buttons */}
-        <div className="w-full flex flex-col sm:flex-row gap-4 mt-6">
+        <div className="w-full flex flex-row justify-between sm:flex-row gap-4 mt-6">
           <button
             type="button"
-            className="flex-1 px-4 py-3 rounded-lg font-semibold bg-[var(--color-lightAccent)] text-white hover:opacity-90 transition"
+          className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
             onClick={handleShortNotes}
             disabled={textractMutation.isPending}
           >
             {textractMutation.isPending ? (
               <span className="w-6 h-6">
-                <Lottie animationData={loader} size={20} loop autoplay />
+                <Lottie animationData={loader} size={styles.loaderSize} loop autoplay />
               </span>
             ) : (
               "Short Notes"
@@ -141,26 +183,28 @@ const UploadFileForm = () => {
 
           <button
             type="button"
-            className="flex-1 px-4 py-3 rounded-lg font-semibold bg-green-500 text-white hover:opacity-90 transition"
+            onClick={handleDeepNotes}
+          className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
           >
             Deep Notes
           </button>
 
           <button
             type="button"
-            className="flex-1 px-4 py-3 rounded-lg font-semibold bg-orange-500 text-white hover:opacity-90 transition"
+            onClick={handleMcqs}
+          className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
           >
-            Practice
+            Practice Quiz
           </button>
         </div>
 
         {/* Extracted Text */}
-        {extractedText && (
-          <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg w-full text-sm overflow-y-auto max-h-60">
-            {extractedText}
-          </div>
-        )}
       </form>
+      {extractedText && (
+        <FormattedDisplay displayNotes={extractedText}>
+
+        </FormattedDisplay>
+      )}
     </Container>
   );
 };
