@@ -1,3 +1,6 @@
+Uses React Query for efficient data fetching + fullt serverless architecture with AWS , Cognito for userpool and auth, S3 and Textract.
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
