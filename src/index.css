@@ -4,40 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 
-  @theme {
+@theme {
   /* 🌞 Light Mode Colors */
-  --color-lightBg: #F8FAFC;          /* soft background */
-  --color-lightSurface: #FFFFFF;     /* cards, navbar, sections */
-  --color-lightText: #0F172A;        /* dark slate text */
-  --color-lightAccent: #2563EB;      /* strong blue accent */
-  --color-lightSecondary: #64748B;   /* muted text */
-  --color-lightBorder: #E2E8F0;      /* subtle border */
-  --color-lightHover: #EFF6FF;       /* hover effect */
+  --color-lightBg: #F8FAFC;          /* soft app background */
+  --color-lightSurface: #FFFFFF;     /* form/card surface */
+  --color-lightText: #1E1B4B;        /* dark indigo text */
+  --color-lightAccent: #9333EA;      /* strong purple accent */
+  --color-lightSecondary: #6B7280;   /* muted gray text */
+  --color-lightBorder: #E5E7EB;      /* subtle border */
+  --color-lightHover: #F3E8FF;       /* soft purple hover */
 
-  --color-buttonLightBg: #60A5FA;    /* blue-400 */
-  --color-buttonLightText: #FFFFFF;  /* button text */
-  --color-buttonLightHover: #3B82F6; /* blue-500 hover */
+  --color-buttonLightBg: #7E22CE;    /* purple-700 */
+  --color-buttonLightText: #FFFFFF;  /* white text */
+  --color-buttonLightHover: #6D28D9; /* purple-800 hover */
 
   /* 🌙 Dark Mode Colors */
-  --color-darkBg: #0F172A;           /* dark slate background */
-  --color-darkSurface: #1E293B;      /* slightly lighter surface */
-  --color-darkText: #F8FAFC;         /* light text */
-  --color-darkAccent: #60A5FA;       /* softer blue accent */
-  --color-darkSecondary: #94A3B8;    /* muted text */
-  --color-darkBorder: #334155;       /* subtle border */
-  --color-darkHover: #1E3A8A;        /* hover blue */
+  --color-darkBg: #0F172A;           /* dark slate bg */
+  --color-darkSurface: #1E1B4B;      /* deep indigo surface */
+  --color-darkText: #F9FAFB;         /* light text */
+  --color-darkAccent: #A855F7;       /* vivid purple accent */
+  --color-darkSecondary: #C7D2FE;    /* soft lavender text */
+  --color-darkBorder: #4C1D95;       /* purple-900 border */
+  --color-darkHover: #5B21B6;        /* purple hover */
 
-  --color-buttonDarkBg: #FFFFFF;     /* white button */
-  --color-buttonDarkText: #0F172A;   /* dark text inside */
-  --color-buttonDarkHover: #CBD5E1;  /* gray hover */
+  --color-buttonDarkBg: #A855F7;     /* purple-500 */
+  --color-buttonDarkText: #FFFFFF;   /* white text */
+  --color-buttonDarkHover: #9333EA;  /* purple-600 hover */
 
   /* 🌟 Special Effects */
-  --color-darkShadow: #8B5CF6;       /* neon indigo-pink */
+  --color-darkShadow: #C084FC;       /* glowing violet shadow */
 
   /* ✅ Utility Colors */
   --color-success: #22C55E;          /* green */
   --color-error: #EF4444;            /* red */
-  --color-warning: #FACC15;          /* yellow */
+  --color-warning: #EAB308;          /* yellow */
   --color-info: #3B82F6;             /* blue */
 
   /* ✍️ Fonts */

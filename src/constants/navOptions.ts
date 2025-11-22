@@ -27,13 +27,6 @@ export const navigationOptions : NavOptions[] = [
     ],
   },
   {
-    label: "Account",
-    link:null,
-    items: [
-      { name: "Profile", link: "/account/profile" },
-    ],
-  },
-  {
     label: "Support",
     link:null,
     items: [

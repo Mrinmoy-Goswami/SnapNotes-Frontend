@@ -83,7 +83,7 @@ const UploadFileForm = () => {
     setFiles(e.target.files)
     setS3Key("")
   }
-console.log("EXTRACTED:",extractedText)
+// console.log("EXTRACTED:",extractedText)
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!files) return;

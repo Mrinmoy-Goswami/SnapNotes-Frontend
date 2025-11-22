@@ -3,12 +3,14 @@ import { Outlet } from "react-router-dom";
 import { NavBar } from "./pages/components/Navbar";
 import React from "react";
 import { RequireAuth } from "./pages/components/AuthWrapper";
+import { useUserSync } from "./hooks/UserSync";
 // import axios from "axios";
 // import { useAuth } from "react-oidc-context";
 // import { useAuth } from "react-oidc-context";
 
 const App = () => {
 
+  useUserSync()
   // const auth = useAuth()
 
 //   useEffect(()=>{

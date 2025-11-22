@@ -12,7 +12,7 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
       const cognitoDomain = import.meta.env.VITE_COGNITO_DOMAIN;
       window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
     };
-
+  
   if (auth.isLoading) {
     return (
       <div className="flex items-center justify-center h-screen ">
@@ -22,9 +22,9 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
   }
 
   if (auth.error) {
-    return <Container className=" flex flex-col align-center">
+    return <Container className=" flex flex-col align-center  items-center">
       <p>⚠️ Auth Error: {auth.error.message}</p>
-     <Button className="w-40" onClick={signOutRedirect}>Go to Signin Page</Button>
+     <Button className="w-40 align-center" onClick={signOutRedirect}>Go to Signin Page</Button>
     </Container>;
   }
 
@@ -34,7 +34,7 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
         <p className="text-lg">You must sign in to access SnapNotes AI</p>
         <button
           onClick={() => auth.signinRedirect()}
-          className="px-6 py-3 bg-cyan-400 text-black font-semibold rounded-xl hover:bg-cyan-300 transition"
+          className="px-6 py-3 bg-purple-600 text-black font-semibold rounded-xl hover:bg-purple-400 transition"
         >
           Sign In
         </button>

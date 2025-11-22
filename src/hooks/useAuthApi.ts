@@ -9,14 +9,14 @@ export const useApiClient = (): AxiosInstance => {
 
   const apiClient = useMemo(() => {
     const instance = axios.create({
-      baseURL: process.env.REACT_APP_API_BASE_URL,
+      baseURL: process.env.VITE_API_BASE,
     });
 
     // Request interceptor
     instance.interceptors.request.use(
       (config) => {
         if (user?.user?.id_token) {
-          config.headers.Authorization = user.user.id_token; 
+          config.headers.Authorization = `Bearer ${user.user.id_token}`; 
         }
         return config;
       },
