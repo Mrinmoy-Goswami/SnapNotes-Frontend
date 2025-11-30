@@ -36,9 +36,6 @@ function HeroSection() {
           className="px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-medium shadow-lg hover:shadow-xl transition w-full sm:w-auto">
             Upload Notes
           </button>
-          <button className="px-6 py-3 rounded-2xl border border-gray-600 hover:border-purple-400 text-gray-300 hover:text-white transition w-full sm:w-auto">
-            Learn More
-          </button>
         </div>
       </motion.div>
     </section>

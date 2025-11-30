@@ -1,14 +1,15 @@
 import Container from "@/components/ui/Container";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
-import axios, { type AxiosResponse } from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
 import { ApiURL } from "@/constants/ApiURI";
 import Lottie from "lottie-react";
 import loader from "../../assets/loader.json";
 import { useAuth } from "react-oidc-context";
-import { prompts, styles } from '../../constants/constants';
+import { MAX_FILE_SIZE, prompts, styles, validateFile } from '../../constants/constants';
 import FormattedDisplay from "../components/FormattedDisplay";
 import { useLoader } from "@/context/LoaderContext";
+import { toast } from "sonner"
 
 interface SignedUrlResponse {
   uploadUrl: string;
@@ -29,15 +30,19 @@ const UploadFileForm = () => {
   const [files, setFiles] = useState<File[] | null | FileList>(null);
   const [s3Key, setS3Key] = useState("");
   const [extractedText, setExtractedText] = useState<string | null>(null);
-
+  const USER_ID = auth.user?.profile?.sub || null;
   // 📤 Upload file → get S3 key
   const uploadFileMutation = useMutation({
     mutationFn: async (selectedFile: File) => {
+      if(selectedFile.size > MAX_FILE_SIZE){
+        toast.error("File size exceeds the maximum limit of 2 MB.");
+      }
       const res = await axios.post(
         ApiURL.GET_S3_SIGNED_URL,
         {
           fileName: selectedFile.name,
           fileType: selectedFile.type,
+          fileSize: selectedFile.size,
         },
         {
           headers: {
@@ -57,31 +62,45 @@ const UploadFileForm = () => {
     },
     onSuccess: (key) => {
       setS3Key(key);
-      alert("File uploaded successfully!");
+      toast.success("File uploaded successfully!");
     },
-    onError: () => {
-      alert("Failed to upload file");
+    onError: (err : AxiosError) => {
+      console.log("ERR",err)
+      toast.error(`Failed to upload file`);
+      hideLoader();
     },
   });
 
   // 📘 Textract call → only on Short Notes button click
   const textractMutation = useMutation({
-    mutationFn: async ({s3Key,promptType} : {s3Key : string,promptType : string} ) => {
-      const res = await axios.post(ApiURL.GET_TEXTRACT_DATA, { s3Key: s3Key, promptType : promptType }) as AxiosResponse<TextractResponse>;
+    mutationFn: async ({s3Key,promptType,userId} : {s3Key : string,promptType : string, userId: string | null} ) => {
+      const res = await axios.post(ApiURL.GET_TEXTRACT_DATA, { s3Key: s3Key, promptType : promptType,userId : userId }) as AxiosResponse<TextractResponse>;
       return res.data.geminiResponse;
     },
     onSuccess: (text) => {
       setExtractedText(text);
-      alert("Text extracted successfully!");
+      toast.success("Notes generateed. You're welcome, productivity hero!");
     },
     onError: () => {
-      alert("Failed to extract text");
+      toast.error("Failed to extract text, please try again.");
     },
   });
   const handleFileInput = (e:React.ChangeEvent<HTMLInputElement>)=>{
     e.preventDefault();
-    setFiles(e.target.files)
-    setS3Key("")
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const { valid, error } = validateFile(file);
+
+    if (!valid) {
+      toast.error(error);
+      e.target.value = ""; 
+      return;
+    }
+    else{
+      setFiles(e.target.files)
+      setS3Key("")
+    }
   }
 // console.log("EXTRACTED:",extractedText)
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -94,12 +113,14 @@ const UploadFileForm = () => {
 
   const handleShortNotes = async () => {
     if (!s3Key) {
-      alert("Please upload a file first.");
+      toast("Please upload a file first.",{
+        description: "Short Notes generation requires an uploaded file.",
+      });
       return;
     }
     try {
       showLoader("Generating short notes...")
-      await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.SHORT_NOTES});
+      await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.SHORT_NOTES, userId : USER_ID});
     } finally{
       hideLoader()
     }
@@ -107,24 +128,24 @@ const UploadFileForm = () => {
 
   const handleDeepNotes = async () => {
     if (!s3Key) {
-      alert("Please upload a file first.");
+      toast("Please upload a file first.");
       return;
     }
     try{
       showLoader("Generating deep notes...")
-     await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.DEEP_NOTES});
+     await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.DEEP_NOTES,userId : USER_ID});
     }finally{
       hideLoader()
     }
   };
   const handleMcqs = async () => {
     if (!s3Key) {
-      alert("Please upload a file first.");
+      toast("Please upload a file first.");
       return;
     }
     try{
       showLoader("Generating mcqs")
-      await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.QUIZ});
+      await textractMutation.mutateAsync({s3Key : s3Key, promptType : prompts.QUIZ,userId : USER_ID});
     } finally{
       hideLoader()
     }
@@ -143,6 +164,7 @@ const UploadFileForm = () => {
           <input
             type="file"
             className="hidden"
+            accept="application/pdf, image/*"
             onChange={handleFileInput}
             disabled={uploadFileMutation.isPending}
           />

@@ -4,6 +4,8 @@ import { NavBar } from "./pages/components/Navbar";
 import React from "react";
 import { RequireAuth } from "./pages/components/AuthWrapper";
 import { useUserSync } from "./hooks/UserSync";
+import { Toaster } from "@/components/ui/sonner"
+
 // import axios from "axios";
 // import { useAuth } from "react-oidc-context";
 // import { useAuth } from "react-oidc-context";
@@ -36,6 +38,7 @@ const App = () => {
       <main className="flex-1 p-1">
         <Outlet />
       </main>
+      <Toaster position="top-right"/>
     </div>
       </RequireAuth>
   );
