@@ -5,13 +5,13 @@ loaderSize : 5
 
 export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 export const ALLOWED_EXTENSIONS = ["pdf", "png", "jpg", "jpeg"];
-const ALLOWED_MIME_TYPES = [
-  "application/pdf",
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp"
-];
+// const ALLOWED_MIME_TYPES = [
+//   "application/pdf",
+//   "image/jpeg",
+//   "image/jpg",
+//   "image/png",
+//   "image/webp"
+// ];
 
 export function validateFile(file: File) {
   const ALLOWED_MIME_TYPES = [

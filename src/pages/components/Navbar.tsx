@@ -11,8 +11,8 @@ import { navigationOptions } from "@/constants/navOptions";
 import React, { useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // hamburger icons
-// import { ModeToggle } from "@/components/ui/ModeToggle";
+import { Menu, X, BookOpen, LogOut } from "lucide-react";
+import { ModeToggle } from "@/components/ui/ModeToggle";
 
 export function NavBar() {
   const auth = useAuth();
@@ -29,11 +29,16 @@ export function NavBar() {
   };
 
   return (
-    <nav className="w-full border-b border-gray-800 bg-black text-white">
+    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="flex items-center justify-between px-4 py-3 md:px-8">
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-purple-500">
-          Snapnotes
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+            <BookOpen className="w-5 h-5 text-primary-foreground" />
+          </div>
+          <span className="text-xl font-bold text-foreground">
+            Snapnotes
+          </span>
         </Link>
 
         {/* Desktop Nav */}
@@ -42,26 +47,28 @@ export function NavBar() {
             <NavigationMenuList className="flex gap-6">
               {navigationOptions.map((navOption) => (
                 <NavigationMenuItem
-                  className="font-semibold"
+                  className="font-semibold text-muted-foreground hover:text-foreground transition-colors"
                   key={navOption.label}
                 >
                   {navOption.link ? (
                     <NavigationMenuLink asChild>
-                      <Link to={navOption.link}>{navOption.label}</Link>
+                      <Link to={navOption.link} className="px-3 py-2">
+                        {navOption.label}
+                      </Link>
                     </NavigationMenuLink>
                   ) : (
                     <>
-                      <NavigationMenuTrigger>
+                      <NavigationMenuTrigger className="bg-transparent hover:bg-muted data-[state=open]:bg-muted">
                         {navOption.label}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[300px] gap-3 p-4">
+                        <ul className="grid w-[300px] gap-3 p-4 bg-card border border-border rounded-lg shadow-lg">
                           {navOption.items.map((item) => (
                             <li key={item.name}>
                               <NavigationMenuLink asChild>
                                 <Link
                                   to={item.link}
-                                  className="block rounded px-2 py-1 hover:bg-muted"
+                                  className="block rounded-lg px-3 py-2 text-foreground hover:bg-muted transition-colors"
                                 >
                                   <div className="font-medium">{item.name}</div>
                                 </Link>
@@ -75,46 +82,57 @@ export function NavBar() {
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
-            {/* <ModeToggle/> */}
           </NavigationMenu>
         </div>
 
-        {/* Logout button (desktop) */}
-        <div className="hidden md:block">
-          <Button onClick={signOutRedirect}>Logout</Button>
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-3">
+          <ModeToggle />
+          <Button 
+            onClick={signOutRedirect}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </Button>
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden text-white"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+        {/* Mobile Actions */}
+        <div className="md:hidden flex items-center gap-3">
+          <ModeToggle />
+          <button
+            className="text-foreground hover:text-primary transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Drawer */}
       {mobileOpen && (
-        <div className="md:hidden bg-gray-900 border-t border-gray-800 px-4 py-4 space-y-4">
+        <div className="md:hidden bg-card border-t border-border px-4 py-4 space-y-4 animate-fade-in">
           {navigationOptions.map((navOption) => (
             <div key={navOption.label}>
               {navOption.link ? (
                 <Link
                   to={navOption.link}
-                  className="block py-2 font-semibold"
+                  className="block py-2 font-semibold text-foreground hover:text-primary transition-colors"
                   onClick={() => setMobileOpen(false)}
                 >
                   {navOption.label}
                 </Link>
               ) : (
                 <div className="space-y-2">
-                  <div className="font-semibold">{navOption.label}</div>
+                  <div className="font-semibold text-foreground">{navOption.label}</div>
                   <ul className="pl-4 space-y-2">
                     {navOption.items.map((item) => (
                       <li key={item.name}>
                         <Link
                           to={item.link}
-                          className="block text-sm text-gray-300 hover:text-white"
+                          className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
                           onClick={() => setMobileOpen(false)}
                         >
                           {item.name}
@@ -129,9 +147,10 @@ export function NavBar() {
 
           {/* Logout button (mobile) */}
           <Button
-            className="w-full bg-purple-600 hover:bg-purple-700"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center gap-2"
             onClick={signOutRedirect}
           >
+            <LogOut className="w-4 h-4" />
             Logout
           </Button>
         </div>
