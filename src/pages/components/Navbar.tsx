@@ -29,7 +29,7 @@ export function NavBar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-lg border-b border-border">
+    <nav className="shadow-lg sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <div className="flex items-center justify-between px-4 py-3 md:px-8">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
@@ -113,7 +113,7 @@ export function NavBar() {
 
       {/* Mobile Menu Drawer */}
       {mobileOpen && (
-        <div className="md:hidden bg-card border-t border-border px-4 py-4 space-y-4 animate-fade-in">
+        <div className="md:hidden bg-card/95 backdrop-blur-lg border-t border-border px-4 py-4 space-y-4 animate-fade-in">
           {navigationOptions.map((navOption) => (
             <div key={navOption.label}>
               {navOption.link ? (

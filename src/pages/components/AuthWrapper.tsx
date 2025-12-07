@@ -33,8 +33,10 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
       <div className="flex flex-col items-center justify-center h-screen gap-6 text-white">
         <p className="text-lg">You must sign in to access SnapNotes AI</p>
         <button
-          onClick={() => auth.signinRedirect()}
-          className="px-6 py-3 bg-purple-600 text-black font-semibold rounded-xl hover:bg-purple-400 transition"
+        type="button"
+        className="w-40 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+        onClick={() => auth.signinRedirect()}
+          // className="px-6 py-3 bg-purple-600 text-black font-semibold rounded-xl hover:bg-purple-400 transition"
         >
           Sign In
         </button>

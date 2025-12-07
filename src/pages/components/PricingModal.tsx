@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { X, Check, Sparkles, Zap, Crown } from 'lucide-react';
+import { Check, Sparkles, Zap, Crown, X as XIcon } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface PricingModalProps {
   isOpen: boolean;
@@ -9,110 +16,91 @@ interface PricingModalProps {
 export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
-  if (!isOpen) return null;
-
   const plans = [
     {
       name: 'Free',
-      icon: <Sparkles className="w-6 h-6" />,
+      icon: <Sparkles className="w-5 h-5" />,
       price: { monthly: 0, yearly: 0 },
-      description: 'Perfect for trying out Snapnotes',
+      description: 'Perfect for trying out',
       features: [
-        '3 note generations per day',
-        'Max file size: 2 MB',
-        'Max pages: 5 per file',
+        '3 notes per day',
+        'Max 2 MB files',
+        'Up to 5 pages',
         'Basic AI summaries',
         'Short notes & MCQs',
       ],
       limitations: [
         'No upload history',
-        'Cannot retrieve raw files',
-        'Standard processing speed',
+        'No file retrieval',
       ],
       cta: 'Get Started',
       popular: false,
-      color: 'bg-card border-border',
     },
     {
       name: 'Student',
-      icon: <Zap className="w-6 h-6" />,
+      icon: <Zap className="w-5 h-5" />,
       price: { monthly: 99, yearly: 999 },
-      description: 'Best for regular students',
+      description: 'Best for students',
       features: [
-        '50 note generations per day',
-        'Max file size: 10 MB',
-        'Max pages: 25 per file',
-        'Advanced AI summaries',
-        'Deep notes + MCQs + Flashcards',
-        'Upload history (30 days)',
-        'Download raw files',
-        'Priority processing',
-        'Email support',
+        '50 notes per day',
+        'Max 10 MB files',
+        'Up to 25 pages',
+        'Advanced AI',
+        'All note types',
+        '30-day history',
+        'Download files',
+        'Priority support',
       ],
       limitations: [],
-      cta: 'Start Free Trial',
+      cta: 'Get Started',
       popular: true,
-      color: 'bg-primary/5 border-primary',
     },
     {
       name: 'Pro',
-      icon: <Crown className="w-6 h-6" />,
+      icon: <Crown className="w-5 h-5" />,
       price: { monthly: 199, yearly: 1999 },
-      description: 'For serious learners',
+      description: 'For power users',
       features: [
-        'Unlimited note generations',
-        'Max file size: 50 MB',
-        'Max pages: 100 per file',
-        'Premium AI with GPT-4',
-        'All note types + Custom prompts',
-        'Upload history (Forever)',
-        'Download raw files anytime',
+        'Unlimited notes',
+        'Max 50 MB files',
+        'Up to 100 pages',
+        'Premium AI (GPT-4)',
+        'Custom prompts',
+        'Forever history',
+        'Bulk uploads (10x)',
         'Fastest processing',
-        'Priority email support',
-        'Custom study schedules',
-        'Bulk upload (up to 10 files)',
+        'Priority support',
       ],
       limitations: [],
-      cta: 'Start Free Trial',
+      cta: 'Get Started',
       popular: false,
-      color: 'bg-card border-border',
     },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-card border border-border rounded-lg shadow-xl">
-        {/* Header */}
-        <div className="sticky top-0 z-10 bg-card border-b border-border p-6">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5 text-muted-foreground" />
-          </button>
-          
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-              Choose Your Plan
-            </h2>
-            <p className="text-muted-foreground">
-              Student-friendly pricing designed for Indian learners
-            </p>
-          </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-7xl max-h-[90vh] p-0 overflow-hidden">
+        <DialogHeader className="px-4 py-4 sm:px-6 sm:py-5 border-b border-border">
+          <DialogTitle className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center">
+            Choose Your Plan
+          </DialogTitle>
+          <DialogDescription className="text-center text-sm sm:text-base">
+            Student-friendly pricing designed for Indian learners
+          </DialogDescription>
 
           {/* Billing Toggle */}
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+          <div className="flex items-center justify-center gap-3 pt-4">
+            <span className={`text-xs sm:text-sm font-medium ${billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
               Monthly
             </span>
             <button
               onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-              className="relative w-14 h-7 bg-muted rounded-full transition-colors"
+              className="relative w-12 h-6 sm:w-14 sm:h-7 bg-muted rounded-full transition-colors"
+              aria-label="Toggle billing cycle"
             >
-              <div className={`absolute top-1 ${billingCycle === 'yearly' ? 'right-1' : 'left-1'} w-5 h-5 bg-primary rounded-full transition-all duration-300`} />
+              <div className={`absolute top-0.5 sm:top-1 ${billingCycle === 'yearly' ? 'right-0.5 sm:right-1' : 'left-0.5 sm:left-1'} w-5 h-5 bg-primary rounded-full transition-all duration-300`} />
             </button>
-            <span className={`text-sm font-medium ${billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+            <span className={`text-xs sm:text-sm font-medium ${billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
               Yearly
             </span>
             {billingCycle === 'yearly' && (
@@ -121,93 +109,100 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
               </span>
             )}
           </div>
-        </div>
+        </DialogHeader>
 
-        {/* Pricing Cards */}
-        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans.map((plan, index) => (
-            <div
-              key={index}
-              className={`relative rounded-lg border-2 p-6 ${plan.color} transition-all duration-300 hover:shadow-lg ${
-                plan.popular ? 'shadow-lg scale-105 md:scale-110' : ''
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-primary text-primary-foreground text-xs font-bold px-4 py-1 rounded-full shadow-lg">
-                    MOST POPULAR
-                  </span>
-                </div>
-              )}
-
-              {/* Plan Header */}
-              <div className="text-center mb-6">
-                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${plan.popular ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'} mb-4`}>
-                  {plan.icon}
-                </div>
-                <h3 className="text-2xl font-bold text-foreground mb-2">
-                  {plan.name}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {plan.description}
-                </p>
-                
-                {/* Price */}
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-bold text-foreground">
-                    ₹{billingCycle === 'monthly' ? plan.price.monthly : plan.price.yearly}
-                  </span>
-                  {plan.price.monthly > 0 && (
-                    <span className="text-muted-foreground">
-                      /{billingCycle === 'monthly' ? 'month' : 'year'}
-                    </span>
-                  )}
-                </div>
-                {billingCycle === 'yearly' && plan.price.yearly > 0 && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    ₹{Math.round(plan.price.yearly / 12)}/month billed annually
-                  </p>
-                )}
-              </div>
-
-              {/* Features List */}
-              <ul className="space-y-3 mb-6">
-                {plan.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-foreground">{feature}</span>
-                  </li>
-                ))}
-                {plan.limitations.map((limitation, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-muted-foreground">{limitation}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* CTA Button */}
-              <button
-                className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
-                  plan.popular
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md'
-                    : 'bg-background border-2 border-border text-foreground hover:border-primary'
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto max-h-[calc(90vh-200px)] px-4 py-6 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 max-w-6xl mx-auto">
+            {plans.map((plan, index) => (
+              <div
+                key={index}
+                className={`relative rounded-xl border-2 p-4 sm:p-5 bg-card transition-all duration-300 hover:shadow-lg ${
+                  plan.popular 
+                    ? 'border-primary shadow-md' 
+                    : 'border-border'
                 }`}
               >
-                {plan.cta}
-              </button>
-            </div>
-          ))}
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-md whitespace-nowrap">
+                      MOST POPULAR
+                    </span>
+                  </div>
+                )}
+
+                {/* Plan Header */}
+                <div className="text-center mb-4">
+                  <div className={`inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-lg mb-3 ${
+                    plan.popular 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'bg-muted text-foreground'
+                  }`}>
+                    {plan.icon}
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
+                    {plan.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3">
+                    {plan.description}
+                  </p>
+                  
+                  {/* Price */}
+                  <div className="flex items-baseline justify-center gap-1 mb-1">
+                    <span className="text-3xl sm:text-4xl font-bold text-foreground">
+                      ₹{billingCycle === 'monthly' ? plan.price.monthly : plan.price.yearly}
+                    </span>
+                    {plan.price.monthly > 0 && (
+                      <span className="text-sm text-muted-foreground">
+                        /{billingCycle === 'monthly' ? 'mo' : 'yr'}
+                      </span>
+                    )}
+                  </div>
+                  {billingCycle === 'yearly' && plan.price.yearly > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      ₹{Math.round(plan.price.yearly / 12)}/mo billed yearly
+                    </p>
+                  )}
+                </div>
+
+                {/* Features List */}
+                <ul className="space-y-2 mb-4">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-success flex-shrink-0 mt-0.5" />
+                      <span className="text-xs sm:text-sm text-foreground leading-tight">{feature}</span>
+                    </li>
+                  ))}
+                  {plan.limitations.map((limitation, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <XIcon className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <span className="text-xs sm:text-sm text-muted-foreground leading-tight">{limitation}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA Button */}
+                <button
+                  className={`w-full py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-all duration-300 ${
+                    plan.popular
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
+                      : 'bg-background border-2 border-border text-foreground hover:border-primary'
+                  }`}
+                >
+                  {plan.cta}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="border-t border-border p-6 bg-muted/30">
-          <div className="text-center text-sm text-muted-foreground">
-            <p className="mb-2">🎓 All paid plans include a <strong className="text-foreground">7-day free trial</strong></p>
-            <p>💳 Secure payment via Razorpay • Cancel anytime • No questions asked</p>
+        <div className="border-t border-border px-4 py-4 sm:px-6 bg-muted/30">
+          <div className="text-center text-xs sm:text-sm text-muted-foreground space-y-1">
+            <p>💳 Secure payment via Razorpay • Cancel anytime</p>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
