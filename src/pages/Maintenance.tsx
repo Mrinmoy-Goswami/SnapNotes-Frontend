@@ -5,6 +5,7 @@ export default function MaintenanceScreen() {
   const [dots, setDots] = useState('');
   const [joke, setJoke] = useState(0);
 
+  
   const jokes = [
     "We're not procrastinating, we're 'strategically delaying'",
     "Currently teaching our AI the difference between 'their' and 'there'",
