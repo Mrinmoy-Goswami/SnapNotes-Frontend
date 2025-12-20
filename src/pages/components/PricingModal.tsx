@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Check, Sparkles, Zap, Crown, X as XIcon } from 'lucide-react';
 import {
   Dialog,

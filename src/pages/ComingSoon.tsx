@@ -1,4 +1,3 @@
-import React from 'react';
 import { Rocket, Sparkles, Clock, Bell, ArrowLeft, Code, Paintbrush, Zap } from 'lucide-react';
 
 interface ComingSoonProps {

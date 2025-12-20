@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Wrench, Coffee, Zap, Brain, Timer, RefreshCw } from 'lucide-react';
 
 export default function MaintenanceScreen() {
