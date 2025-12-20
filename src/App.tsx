@@ -36,7 +36,6 @@ if (isMaintenance) {
 }
 
 
-
      return (
       <RequireAuth>
     <div className="min-h-screen ">
