@@ -17,7 +17,7 @@ const queryClient = new QueryClient()
 const cognitoAuthConfig = {
   authority: import.meta.env.VITE_COGNITO_AUTHORITY,
   client_id: import.meta.env.VITE_CLIENT_ID,
-  redirect_uri: "http://localhost:5173",
+  redirect_uri: import.meta.env.VITE_REDIRECT_URI,
   response_type: "code",
   scope: "email openid profile s3-api/Upload",
   loadUserInfo: true,

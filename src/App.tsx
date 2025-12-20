@@ -5,6 +5,7 @@ import React from "react";
 import { RequireAuth } from "./pages/components/AuthWrapper";
 import { useUserSync } from "./hooks/UserSync";
 import { Toaster } from "@/components/ui/sonner"
+import MaintenanceScreen from "./pages/Maintenance";
 
 // import axios from "axios";
 // import { useAuth } from "react-oidc-context";
@@ -27,7 +28,12 @@ const App = () => {
 //     axios.interceptors.request.eject(interceptor)
 //   };
 // },[auth.user?.access_token])
- 
+ const isMaintenance =
+  import.meta.env.VITE_MAINTENANCE_MODE === "true";
+
+if (isMaintenance) {
+  return <MaintenanceScreen />;
+}
 
 
 

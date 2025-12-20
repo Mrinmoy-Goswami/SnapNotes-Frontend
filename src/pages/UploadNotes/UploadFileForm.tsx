@@ -11,6 +11,7 @@ import FormattedDisplay from "../components/FormattedDisplay";
 import { useLoader } from "@/context/LoaderContext";
 import { toast } from "sonner";
 import { Upload, FileText, BookOpen, Brain } from "lucide-react";
+import {PDFDocument} from 'pdf-lib';
 
 interface SignedUrlResponse {
   uploadUrl: string;
@@ -36,7 +37,14 @@ const UploadFileForm = () => {
   const uploadFileMutation = useMutation({
     mutationFn: async (selectedFile: File) => {
       if (selectedFile.size > MAX_FILE_SIZE) {
-        toast.error("File size exceeds the maximum limit of 2 MB.");
+        throw new Error("File size exceeds the maximum limit of 2 MB.");
+      }
+      if(selectedFile.type === "application/pdf"){
+        const arrayBufferFile = await selectedFile.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(arrayBufferFile);
+        if(pdfDoc.getPageCount() > 5) {
+          throw new Error("PDF exceeds the maximum page limit of 5 pages.");
+        }
       }
       const res = await axios.post(
         ApiURL.GET_S3_SIGNED_URL,
@@ -67,7 +75,7 @@ const UploadFileForm = () => {
     },
     onError: (err: AxiosError) => {
       console.log("ERR", err);
-      toast.error(`Failed to upload file`);
+      toast.error(err.message || `Failed to upload file`);
       hideLoader();
     },
   });

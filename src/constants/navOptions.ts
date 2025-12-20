@@ -30,8 +30,7 @@ export const navigationOptions : NavOptions[] = [
     label: "Support",
     link:null,
     items: [
-      { name: "Raise Issue", link: "/support/issue" },
-      { name: "Contact Us", link: "/support/contact" } 
+      { name: "Contact Us", link: "mailto:mrinmoygoswami704@gmail.com" } 
     ]
   },
 ] as const

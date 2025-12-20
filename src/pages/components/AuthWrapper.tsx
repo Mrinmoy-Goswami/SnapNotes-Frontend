@@ -8,7 +8,7 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
   const signOutRedirect = () => {
     auth.removeUser()
       const clientId = import.meta.env.VITE_CLIENT_ID;
-      const logoutUri = "http://localhost:5173";
+      const logoutUri = import.meta.env.VITE_LOGOUT_URL;
       const cognitoDomain = import.meta.env.VITE_COGNITO_DOMAIN;
       window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
     };
