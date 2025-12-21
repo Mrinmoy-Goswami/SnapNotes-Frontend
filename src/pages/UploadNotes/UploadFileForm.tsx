@@ -18,6 +18,12 @@ interface SignedUrlResponse {
   key: string;
 }
 
+interface ExtractedText{
+  shortNotes?: string;
+  deepNotes?: string;
+  quiz?: string;
+}
+
 interface TextractResponse {
   s3Key: string;
   extractedTextLength: number;
@@ -25,24 +31,40 @@ interface TextractResponse {
   geminiResponse: string;
 }
 
+const setDisplayedText = (textType: string, text: ExtractedText) => {
+  switch (textType) {
+    case prompts.SHORT_NOTES: 
+      return text.shortNotes;
+    case prompts.DEEP_NOTES:
+      return text.deepNotes;
+    case prompts.QUIZ:
+      return text.quiz;
+    default:
+      return "";
+  }
+};
+
 const UploadFileForm = () => {
   const { showLoader, hideLoader } = useLoader();
   const auth = useAuth();
   const [files, setFiles] = useState<File[] | null | FileList>(null);
   const [s3Key, setS3Key] = useState("");
-  const [extractedText, setExtractedText] = useState<string | null>(null);
+  const [extractedText, setExtractedText] = useState<ExtractedText | null>(null);
+  const [promptType, setPromptType] = useState<string>("");
   const USER_ID = auth.user?.profile?.sub || null;
 
   // 📤 Upload file → get S3 key
   const uploadFileMutation = useMutation({
     mutationFn: async (selectedFile: File) => {
+      let pages = 1;
       if (selectedFile.size > MAX_FILE_SIZE) {
         throw new Error("File size exceeds the maximum limit of 2 MB.");
       }
       if(selectedFile.type === "application/pdf"){
         const arrayBufferFile = await selectedFile.arrayBuffer();
         const pdfDoc = await PDFDocument.load(arrayBufferFile);
-        if(pdfDoc.getPageCount() > 5) {
+        pages = pdfDoc.getPageCount() ?? 1;
+        if(pages > 5) {
           throw new Error("PDF exceeds the maximum page limit of 5 pages.");
         }
       }
@@ -52,6 +74,7 @@ const UploadFileForm = () => {
           fileName: selectedFile.name,
           fileType: selectedFile.type,
           fileSize: selectedFile.size,
+          pages : pages,
         },
         {
           headers: {
@@ -87,7 +110,11 @@ const UploadFileForm = () => {
       return res.data.geminiResponse;
     },
     onSuccess: (text) => {
-      setExtractedText(text);
+      setExtractedText(prev => ({...prev, 
+        shortNotes: promptType === prompts.SHORT_NOTES ? text : prev?.shortNotes,
+        deepNotes: promptType === prompts.DEEP_NOTES ? text : prev?.deepNotes,
+        quiz: promptType === prompts.QUIZ ? text : prev?.quiz
+      }));
       toast.success("Notes generated. You're welcome, productivity hero!");
     },
     onError: () => {
@@ -97,6 +124,7 @@ const UploadFileForm = () => {
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    setExtractedText(null);
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -121,6 +149,11 @@ const UploadFileForm = () => {
   };
 
   const handleShortNotes = async () => {
+    setPromptType(prompts.SHORT_NOTES);
+    if(extractedText?.shortNotes){
+      // toast("Short notes already generated. Check below!");
+      return;
+    }
     if (!s3Key) {
       toast("Please upload a file first.", {
         description: "Short Notes generation requires an uploaded file.",
@@ -136,6 +169,11 @@ const UploadFileForm = () => {
   };
 
   const handleDeepNotes = async () => {
+    setPromptType(prompts.DEEP_NOTES);
+    if(extractedText?.deepNotes){
+      // toast("Deep notes already generated. Check below!");
+      return;
+    }
     if (!s3Key) {
       toast("Please upload a file first.");
       return;
@@ -149,6 +187,11 @@ const UploadFileForm = () => {
   };
 
   const handleMcqs = async () => {
+    setPromptType(prompts.QUIZ);
+    if(extractedText?.quiz){
+      // toast("Quiz already generated. Check below!");
+      return;
+    }
     if (!s3Key) {
       toast("Please upload a file first.");
       return;
@@ -160,6 +203,8 @@ const UploadFileForm = () => {
       hideLoader();
     }
   };
+
+  console.log("PROMPT TYPE", promptType, extractedText);
 
   return (
     <Container className="flex h-full items-center flex-col justify-center mt-12 px-4">
@@ -271,7 +316,10 @@ const UploadFileForm = () => {
       </form>
 
       {/* Extracted Text */}
-      {extractedText && <FormattedDisplay displayNotes={extractedText} />}
+      {extractedText && <FormattedDisplay 
+      displayNotes={setDisplayedText(promptType, extractedText) || ""} 
+      
+      />}
     </Container>
   );
 };
